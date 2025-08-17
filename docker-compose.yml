@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  python-courses-app:
+    build: .
+    container_name: python-courses
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./storage:/app/storage
+    environment:
+      - FLASK_ENV=production
+      - FLASK_DEBUG=0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# Опціонально: створення named volume
+volumes:
+  storage_data:
+    driver: local
