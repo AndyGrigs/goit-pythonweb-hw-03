@@ -7,19 +7,21 @@ services:
     ports:
       - "3000:3000"
     volumes:
+      
       - ./storage:/app/storage
     environment:
       - FLASK_ENV=production
       - FLASK_DEBUG=0
     restart: unless-stopped
+  
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:3000/')"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
 
-# Опціонально: створення named volume
+
 volumes:
   storage_data:
     driver: local

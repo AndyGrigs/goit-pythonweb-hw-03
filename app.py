@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, send_from_directory, flash
 import json
+import secrets
 import os
 from datetime import datetime
 
 app = Flask(__name__)
-
+app.secret_key = os.environ.get('SECRET_KEY') or secrets.token_hex(16)
 DATA_FILE = 'storage/data.json'
 
 def load_data():
@@ -137,8 +138,17 @@ def not_found(error):
     return render_template('error.html'), 404
 
 if __name__ == '__main__':
-    # Створити папку templates якщо не існує
+    # Створити необхідні папки
     os.makedirs('templates', exist_ok=True)
     os.makedirs('static', exist_ok=True)
+    os.makedirs('storage', exist_ok=True)
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    print("🚀 Запуск Flask додатка...")
+    print("📍 Доступні URL:")
+    print("   http://localhost:3000/ - головна сторінка")
+    print("   http://localhost:3000/message.html - форма повідомлень")
+    print("   http://localhost:3000/read - перегляд повідомлень")
+    print("   http://localhost:3000/api/messages - API повідомлень")
+    print("⏹️  Для зупинки натисніть Ctrl+C")
+    
+    app.run(debug=True, host='0.0.0.0', port=3000)
