@@ -85,3 +85,60 @@ def read_messages():
     """Сторінка для читання всіх повідомлень"""
     data = load_data()
     return render_template('read.html', messages=data)
+
+@app.route('/api/messages')
+def api_messages():
+    """API для отримання всіх повідомлень у JSON форматі"""
+    data = load_data()
+    return jsonify(data)
+
+@app.route('/api/messages/<timestamp>')
+def api_message_detail(timestamp):
+    """API для отримання конкретного повідомлення за часом"""
+    data = load_data()
+    message = data.get(timestamp)
+    if message:
+        return jsonify({timestamp: message})
+    return jsonify({'error': 'Повідомлення не знайдено'}), 404
+
+@app.route('/error.html')
+@app.route('/404')
+def error_404():
+    """Сторінка помилки 404"""
+    return render_template('error.html'), 404
+
+@app.route('/style.css')
+def serve_css():
+    """Подача CSS файлу"""
+    try:
+        # Спочатку спробуємо static папку, потім корінь
+        return send_from_directory('static', 'style.css', mimetype='text/css')
+    except:
+        return send_from_directory('.', 'style.css', mimetype='text/css')
+    
+
+@app.route('/logo.png')
+def serve_logo():
+    """Подача файлу логотипу"""
+    try:
+        # Спочатку спробуємо static папку, потім корінь
+        return send_from_directory('static', 'logo.png', mimetype='image/png')
+    except:
+        return send_from_directory('.', 'logo.png', mimetype='image/png')
+    
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    """Подача статичних файлів з папки static"""
+    return send_from_directory('static', filename)
+
+@app.errorhandler(404)
+def not_found(error):
+    """Обробник помилки 404"""
+    return render_template('error.html'), 404
+
+if __name__ == '__main__':
+    # Створити папку templates якщо не існує
+    os.makedirs('templates', exist_ok=True)
+    os.makedirs('static', exist_ok=True)
+    
+    app.run(debug=True, host='0.0.0.0', port=5000)
