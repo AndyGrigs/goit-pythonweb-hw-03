@@ -26,7 +26,7 @@ def save_data(data):
 
 @app.route("/")
 def index():
-    return render_template('index.hhtml')
+    return render_template('index.html')
 
 @app.route('/message.html')
 @app.route('/message', methods=['POST'])
@@ -36,22 +36,21 @@ def handle_message():
     message = request.form.get('message', '').strip()
     
     
-    # Валідація даних
     if not username:
         flash('Будь ласка, введіть ваш нікнейм!', 'error')
-        return redirect(url_for('message_form'))
+        return redirect(url_for('index'))
     
     if not message:
         flash('Будь ласка, введіть повідомлення!', 'error')
-        return redirect(url_for('message_form'))
+        return redirect(url_for('index'))
     
     if len(username) > 50:
         flash('Нікнейм занадто довгий (максимум 50 символів)!', 'error')
-        return redirect(url_for('message_form'))
+        return redirect(url_for('index'))
     
     if len(message) > 500:
         flash('Повідомлення занадто довге (максимум 500 символів)!', 'error')
-        return redirect(url_for('message_form'))
+        return redirect(url_for('index'))
     
     try:
         # Завантажити існуючі дані
@@ -81,7 +80,7 @@ def handle_message():
     # Перенаправити на головну сторінку
     return redirect(url_for('index'))
 
-@app.reute('/read')
+@app.route('/read')
 def read_messages():
     """Сторінка для читання всіх повідомлень"""
     data = load_data()
