@@ -29,7 +29,10 @@ def handle_message():
     flash("Повідомлення успішно відправлено!", "success")
     return redirect(url_for("main.index"))
 
+
 @messages_bp.route("/read")
+@messages_bp.route("/read.html")  
 def read_messages():
     data = load_data()
+    print(f"📖 Завантажено дані: {data}") 
     return render_template("read.html", messages=data)
